@@ -39,8 +39,8 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git tag ${{ github.event.inputs.tag_name }}
-          git push origin ${{ github.event.inputs.tag_name }}
+          git tag ${{ github.event.inputs.tag_name }} || echo "Tag already exists"
+          git push origin ${{ github.event.inputs.tag_name }} || echo "Tag already pushed"
 
       - name: Prepare pre-changelog message
         id: pre_changelog_message
@@ -94,7 +94,6 @@ jobs:
           asset_name: FNF-JS-Engine-linux.zip
           draft: true
           prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-          body: ${{ steps.build_body.outputs.body }}
           generate_release_notes: true
           overwrite: true
 
@@ -118,12 +117,11 @@ jobs:
         uses: svenstaro/upload-release-action@2.5.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.TAG_NAME }}
+          tag: ${{ github.event.inputs.tag_name }}
           file: windowsBuild.zip
           asset_name: FNF-JS-Engine-windows.zip
           draft: true
           prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-          body: ${{ steps.build_body.outputs.body }}
           generate_release_notes: true
           overwrite: true
 
@@ -136,35 +134,32 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: macBuild-intel
-          path: build
+          path: build-intel
 
       - name: Compress Intel build
         run: |
           sudo apt-get install -y p7zip-full
-          7z a -tzip macBuild-intel.zip -w ./build/
-          rm -rf ./build
+          7z a -tzip macBuild-intel.zip -w ./build-intel/.
 
       - name: Download Mac ARM artifact
         uses: actions/download-artifact@v4
         with:
           name: macBuild-arm
-          path: build
+          path: build-arm
 
       - name: Compress ARM build
         run: |
-          7z a -tzip macBuild-arm.zip -w ./build/
-          rm -rf ./build
+          7z a -tzip macBuild-arm.zip -w ./build-arm/.
 
       - name: Upload macBuild-intel
         uses: svenstaro/upload-release-action@2.5.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.TAG_NAME }}
+          tag: ${{ github.event.inputs.tag_name }}
           file: macBuild-intel.zip
           asset_name: FNF-JS-Engine-macOS-Intel.zip
           draft: true
           prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-          body: ${{ steps.build_body.outputs.body }}
           generate_release_notes: true
           overwrite: true
 
@@ -172,11 +167,107 @@ jobs:
         uses: svenstaro/upload-release-action@2.5.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.TAG_NAME }}
+          tag: ${{ github.event.inputs.tag_name }}
           file: macBuild-arm.zip
           asset_name: FNF-JS-Engine-macOS-ARM.zip
           draft: true
           prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-          body: ${{ steps.build_body.outputs.body }}
+          generate_release_notes: true
+          overwrite: true
+
+  # ==========================================
+  # NEW MOBILE & WEB RELEASE JOBS
+  # ==========================================
+
+  release-android:
+    name: Release androidBuild
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Android artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: androidBuild
+          path: build
+
+      - name: Find and Package APK
+        run: |
+          sudo apt-get install -y p7zip-full
+          # If artifact is a folder containing the APK, locate it or zip it up
+          if [ -f ./build/*.apk ]; then
+            cp ./build/*.apk ./FNF-JS-Engine-Android.apk
+          else
+            7z a -tzip FNF-JS-Engine-android.zip -w ./build/.
+          fi
+
+      - name: Upload Android Release
+        uses: svenstaro/upload-release-action@2.5.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.inputs.tag_name }}
+          file: ${{ hashFiles('FNF-JS-Engine-Android.apk') != '' && 'FNF-JS-Engine-Android.apk' || 'FNF-JS-Engine-android.zip' }}
+          asset_name: ${{ hashFiles('FNF-JS-Engine-Android.apk') != '' && 'FNF-JS-Engine-Android.apk' || 'FNF-JS-Engine-android.zip' }}
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
+          generate_release_notes: true
+          overwrite: true
+
+  release-ios:
+    name: Release iosBuild
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download iOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iosBuild
+          path: build
+
+      - name: Package iOS Build
+        run: |
+          sudo apt-get install -y p7zip-full
+          if [ -f ./build/*.ipa ]; then
+            cp ./build/*.ipa ./FNF-JS-Engine-iOS.ipa
+          else
+            7z a -tzip FNF-JS-Engine-iOS.zip -w ./build/.
+          fi
+
+      - name: Upload iOS Release
+        uses: svenstaro/upload-release-action@2.5.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.inputs.tag_name }}
+          file: ${{ hashFiles('FNF-JS-Engine-iOS.ipa') != '' && 'FNF-JS-Engine-iOS.ipa' || 'FNF-JS-Engine-iOS.zip' }}
+          asset_name: ${{ hashFiles('FNF-JS-Engine-iOS.ipa') != '' && 'FNF-JS-Engine-iOS.ipa' || 'FNF-JS-Engine-iOS.zip' }}
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
+          generate_release_notes: true
+          overwrite: true
+
+  release-html:
+    name: Release html5Build
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: html5Build
+          path: build
+
+      - name: Compress HTML5 web build
+        run: |
+          sudo apt-get install -y p7zip-full
+          7z a -tzip html5Build.zip -w ./build/.
+
+      - name: Upload HTML5 Release
+        uses: svenstaro/upload-release-action@2.5.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.inputs.tag_name }}
+          file: html5Build.zip
+          asset_name: FNF-JS-Engine-html5.zip
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
           generate_release_notes: true
           overwrite: true
