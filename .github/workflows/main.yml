@@ -29,20 +29,20 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@main
+      - uses: actions/checkout@main[span_2](start_span)[span_2](end_span)
 
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@master[span_3](start_span)[span_3](end_span)
         with:
-          haxe-version: 4.3.7
+          haxe-version: 4.3.7[span_4](start_span)[span_4](end_span)
       - name: Restore Previous Cache
         id: cache-build-linux-restore
-        uses: actions/cache/restore@main
+        uses: actions/cache/restore@main[span_5](start_span)[span_5](end_span)
         with:
           path: |
             .haxelib/
             build/release/linux/haxe/
             build/release/linux/obj/
-          key: cache-linux-build
+          key: cache-linux-build[span_6](start_span)[span_6](end_span)
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
@@ -65,9 +65,9 @@ jobs:
       - name: Compile
         run: |
           rm -f assets/preload/gameRenders/renderlol.bat
-          haxelib run lime build linux -D ${{ inputs.buildFlags || 'commit' }}
+          haxelib run lime build linux -D ${{ inputs.buildFlags || 'commit' }}[span_7](start_span)[span_7](end_span)
       - name: Clear Previous Cache
-        uses: actions/github-script@main
+        uses: actions/github-script@main[span_8](start_span)[span_8](end_span)
         with:
           script: |
             try {
@@ -94,15 +94,15 @@ jobs:
 
       - name: Save Current Cache
         id: cache-build-linux-save
-        uses: actions/cache/save@main
+        uses: actions/cache/save@main[span_9](start_span)[span_9](end_span)
         with:
           path: |
             .haxelib/
             build/release/linux/haxe/
             build/release/linux/obj/
-          key: cache-linux-build
+          key: cache-linux-build[span_10](start_span)[span_10](end_span)
       - name: Publish Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@main[span_11](start_span)[span_11](end_span)
         with:
           name: linuxBuild
           path: build/release/linux/bin
@@ -112,20 +112,20 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@main
+      - uses: actions/checkout@main[span_12](start_span)[span_12](end_span)
 
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@master[span_13](start_span)[span_13](end_span)
         with:
-          haxe-version: 4.3.7
+          haxe-version: 4.3.7[span_14](start_span)[span_14](end_span)
       - name: Restore Previous Cache
         id: cache-build-windows-restore
-        uses: actions/cache/restore@main
+        uses: actions/cache/restore@main[span_15](start_span)[span_15](end_span)
         with:
           path: |
             .haxelib/
             build/release/windows/haxe/
             build/release/windows/obj/
-          key: cache-windows-build
+          key: cache-windows-build[span_16](start_span)[span_16](end_span)
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
@@ -143,9 +143,9 @@ jobs:
           cd ../../../../..
       - name: Compile
         run: |
-          haxelib run lime build windows -D ${{ inputs.buildFlags || 'commit' }}
+          haxelib run lime build windows -D ${{ inputs.buildFlags || 'commit' }}[span_17](start_span)[span_17](end_span)
       - name: Clear Previous Cache
-        uses: actions/github-script@main
+        uses: actions/github-script@main[span_18](start_span)[span_18](end_span)
         with:
           script: |
             try {
@@ -172,37 +172,38 @@ jobs:
 
       - name: Save Current Cache
         id: cache-build-windows-save
-        uses: actions/cache/save@main
+        uses: actions/cache/save@main[span_19](start_span)[span_19](end_span)
         with:
           path: |
             .haxelib/
             build/release/windows/haxe/
             build/release/windows/obj/
-          key: cache-windows-build
+          key: cache-windows-build[span_20](start_span)[span_20](end_span)
       - name: Publish Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@main[span_21](start_span)[span_21](end_span)
         with:
           name: windowsBuild
           path: build/release/windows/bin
+
   buildMacIntel:
     runs-on: macos-15
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@main
+      - uses: actions/checkout@main[span_22](start_span)[span_22](end_span)
 
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@master[span_23](start_span)[span_23](end_span)
         with:
-          haxe-version: 4.3.7
+          haxe-version: 4.3.7[span_24](start_span)[span_24](end_span)
       - name: Restore Previous Cache
         id: cache-build-macosintel-restore
-        uses: actions/cache/restore@main
+        uses: actions/cache/restore@main[span_25](start_span)[span_25](end_span)
         with:
           path: |
             .haxelib/
             build/release/macos/haxe/
             build/release/macos/obj/
-          key: cache-macos-build
+          key: cache-macos-build[span_26](start_span)[span_26](end_span)
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
@@ -221,9 +222,9 @@ jobs:
       - name: Compile
         run: |
           rm -f assets/preload/gameRenders/renderlol.bat
-          haxelib run lime build mac -64 -D ${{ inputs.buildFlags || 'commit' }} -D HXCPP_M64
+          haxelib run lime build mac -64 -D ${{ inputs.buildFlags || 'commit' }} -D HXCPP_M64[span_27](start_span)[span_27](end_span)
       - name: Clear Previous Cache
-        uses: actions/github-script@main
+        uses: actions/github-script@main[span_28](start_span)[span_28](end_span)
         with:
           script: |
             try {
@@ -250,15 +251,15 @@ jobs:
 
       - name: Save Current Cache
         id: cache-build-macosintel-save
-        uses: actions/cache/save@main
+        uses: actions/cache/save@main[span_29](start_span)[span_29](end_span)
         with:
           path: |
             .haxelib/
             build/release/macos/haxe/
             build/release/macos/obj/
-          key: cache-macosintel-build
+          key: cache-macosintel-build[span_30](start_span)[span_30](end_span)
       - name: Publish Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@main[span_31](start_span)[span_31](end_span)
         with:
           name: macBuild-intel
           path: build/release/macos/bin
@@ -268,20 +269,20 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@main
+      - uses: actions/checkout@main[span_32](start_span)[span_32](end_span)
 
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@master[span_33](start_span)[span_33](end_span)
         with:
-          haxe-version: 4.3.7
+          haxe-version: 4.3.7[span_34](start_span)[span_34](end_span)
       - name: Restore Previous Cache
         id: cache-build-macosarm-restore
-        uses: actions/cache/restore@main
+        uses: actions/cache/restore@main[span_35](start_span)[span_35](end_span)
         with:
           path: |
             .haxelib/
             build/release/macos/haxe/
             build/release/macos/obj/
-          key: cache-macos-build
+          key: cache-macos-build[span_36](start_span)[span_36](end_span)
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
@@ -300,9 +301,9 @@ jobs:
       - name: Compile
         run: |
           rm -f assets/preload/gameRenders/renderlol.bat
-          haxelib run lime build mac -arm64 -D ${{ inputs.buildFlags || 'commit' }} -D HXCPP_ARM64
+          haxelib run lime build mac -arm64 -D ${{ inputs.buildFlags || 'commit' }} -D HXCPP_ARM64[span_37](start_span)[span_37](end_span)
       - name: Clear Previous Cache
-        uses: actions/github-script@main
+        uses: actions/github-script@main[span_38](start_span)[span_38](end_span)
         with:
           script: |
             try {
@@ -329,15 +330,119 @@ jobs:
 
       - name: Save Current Cache
         id: cache-build-macosarm-save
-        uses: actions/cache/save@main
+        uses: actions/cache/save@main[span_39](start_span)[span_39](end_span)
         with:
           path: |
             .haxelib/
             build/release/macos/haxe/
             build/release/macos/obj/
-          key: cache-macosarm-build
+          key: cache-macosarm-build[span_40](start_span)[span_40](end_span)
       - name: Publish Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@main[span_41](start_span)[span_41](end_span)
         with:
           name: macBuild-arm
           path: build/release/macos/bin
+
+  buildAndroid:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main[span_42](start_span)[span_42](end_span)
+
+      - uses: krdlab/setup-haxe@master[span_43](start_span)[span_43](end_span)
+        with:
+          haxe-version: 4.3.7[span_44](start_span)[span_44](end_span)
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install --force
+
+      - name: Compile hxcpp
+        run: |
+          cd .haxelib/hxcpp/git/tools/run
+          haxe compile.hxml
+          cd ..
+          cd ./hxcpp
+          haxe compile.hxml
+          cd ../../../../..
+
+      - name: Compile Android
+        run: |
+          haxelib run lime build android -D ${{ inputs.buildFlags || 'commit' }}
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main[span_45](start_span)[span_45](end_span)
+        with:
+          name: androidBuild
+          path: build/release/android/bin
+
+  buildIos:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@main[span_46](start_span)[span_46](end_span)
+
+      - uses: krdlab/setup-haxe@master[span_47](start_span)[span_47](end_span)
+        with:
+          haxe-version: 4.3.7[span_48](start_span)[span_48](end_span)
+
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install --force
+
+      - name: Compile hxcpp
+        run: |
+          cd .haxelib/hxcpp/git/tools/run
+          haxe compile.hxml
+          cd ..
+          cd ./hxcpp
+          haxe compile.hxml
+          cd ../../../../..
+
+      - name: Compile iOS
+        run: |
+          haxelib run lime build ios -D ${{ inputs.buildFlags || 'commit' }}
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main[span_49](start_span)[span_49](end_span)
+        with:
+          name: iosBuild
+          path: build/release/ios/bin
+
+  buildHtml:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main[span_50](start_span)[span_50](end_span)
+
+      - uses: krdlab/setup-haxe@master[span_51](start_span)[span_51](end_span)
+        with:
+          haxe-version: 4.3.7[span_52](start_span)[span_52](end_span)
+
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install --force
+
+      - name: Compile HTML5
+        run: |
+          haxelib run lime build html5 -D ${{ inputs.buildFlags || 'commit' }}
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main[span_53](start_span)[span_53](end_span)
+        with:
+          name: htmlBuild
+          path: build/release/html5/bin
